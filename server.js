@@ -1,46 +1,78 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const { WebcastPushConnection } = require('tiktok-live-connector');
+import express from 'express';
+import { createServer } from 'node:http';
+import { Server } from 'socket.io';
+import { TikTokLiveConnection, WebcastEvent, ControlEvent } from 'tiktok-live-connector';
 
 const app = express();
-const server = http.createServer(app);
+const server = createServer(app);
 const io = new Server(server);
 
 app.use(express.static('public'));
 
-// ⚠️ Troque pelo @ de quem estiver AO VIVO (sem o @)
-const TIKTOK_USERNAME = 'nome_do_streamer_aqui';
+const TIKTOK_USERNAME = (process.env.TIKTOK_USERNAME || 'nandobr_ofc').replace(/^@/, '');
+const PORT = Number(process.env.PORT || 3000);
+const tiktok = new TikTokLiveConnection(TIKTOK_USERNAME);
 
-const tiktok = new WebcastPushConnection(TIKTOK_USERNAME);
-
-tiktok.connect()
-  .then(state => console.log(`✅ Conectado na live (room ${state.roomId})`))
-  .catch(err => console.error('❌ Falha ao conectar:', err));
-
-io.on('connection', (socket) => {
-  console.log('🖥️ Jogo conectado.');
-
-  tiktok.on('chat', d => socket.emit('tiktok-chat', {
-    user: d.uniqueId, comment: d.comment
-  }));
-
-  tiktok.on('like', d => socket.emit('tiktok-like', {
-    user: d.uniqueId, likeCount: d.likeCount
-  }));
-
-  tiktok.on('gift', d => socket.emit('tiktok-gift', {
-    user: d.uniqueId,
-    giftName: d.giftName,
-    amount: d.repeatCount,
-    diamonds: d.diamondCount || 1
-  }));
-
-  tiktok.on('follow', d => socket.emit('tiktok-follow', {
-    user: d.uniqueId
-  }));
+app.get('/health', (_req, res) => {
+  res.json({
+    ok: true,
+    tiktokUsername: TIKTOK_USERNAME,
+    tiktokConnected: Boolean(tiktok.isConnected)
+  });
 });
 
-server.listen(3000, () =>
-  console.log('🚀 Jogo em http://localhost:3000')
-);
+io.on('connection', () => {
+  console.log('🖥️ Jogo conectado ao servidor.');
+});
+
+// Registre cada evento uma única vez no servidor e envie para todos os navegadores.
+tiktok.on(WebcastEvent.CHAT, (d) => {
+  io.emit('tiktok-chat', {
+    user: d.user?.displayId || d.user?.uniqueId || 'espectador',
+    comment: d.content ?? d.comment ?? ''
+  });
+});
+
+tiktok.on(WebcastEvent.LIKE, (d) => {
+  io.emit('tiktok-like', {
+    user: d.user?.displayId || d.user?.uniqueId || 'espectador',
+    likeCount: Number(d.likeCount ?? d.count ?? 1)
+  });
+});
+
+tiktok.on(WebcastEvent.GIFT, (d) => {
+  const gift = d.giftDetails ?? d.gift ?? {};
+  io.emit('tiktok-gift', {
+    user: d.user?.displayId || d.user?.uniqueId || 'espectador',
+    giftName: gift.giftName || gift.name || d.giftName || `Presente ${d.giftId ?? ''}`.trim(),
+    amount: Number(d.repeatCount ?? d.repeat_count ?? 1),
+    diamonds: Number(gift.diamondCount ?? gift.diamond_count ?? d.diamondCount ?? 1)
+  });
+});
+
+tiktok.on(WebcastEvent.FOLLOW, (d) => {
+  io.emit('tiktok-follow', {
+    user: d.user?.displayId || d.user?.uniqueId || 'espectador'
+  });
+});
+
+tiktok.on(ControlEvent.ERROR, (d) => {
+  console.error('❌ Erro no conector TikTok LIVE:', d?.info || d?.exception || d);
+});
+
+async function start() {
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Jogo disponível na porta ${PORT}`);
+    console.log(`📡 Preparando conexão com @${TIKTOK_USERNAME}`);
+  });
+
+  try {
+    const state = await tiktok.connect();
+    console.log(`✅ Conectado à live @${TIKTOK_USERNAME} (sala ${state.roomId})`);
+  } catch (error) {
+    console.error(`❌ Não foi possível conectar a @${TIKTOK_USERNAME}.`);
+    console.error(error?.message || error);
+  }
+}
+
+start();
