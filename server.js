@@ -1,27 +1,46 @@
-'use strict';
-
 const express = require('express');
-const path = require('path');
+const http = require('http');
+const { Server } = require('socket.io');
+const { WebcastPushConnection } = require('tiktok-live-connector');
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
-const publicDir = path.join(__dirname, 'public');
+const server = http.createServer(app);
+const io = new Server(server);
 
-app.disable('x-powered-by');
-app.use(express.static(publicDir, {
-  extensions: ['html'],
-  etag: true,
-  maxAge: process.env.NODE_ENV === 'production' ? '1h' : 0
-}));
+app.use(express.static('public'));
 
-app.get('/health', (_req, res) => {
-  res.status(200).json({ ok: true, game: 'Batalha Brasil' });
+// ⚠️ Troque pelo @ de quem estiver AO VIVO (sem o @)
+const TIKTOK_USERNAME = 'nome_do_streamer_aqui';
+
+const tiktok = new WebcastPushConnection(TIKTOK_USERNAME);
+
+tiktok.connect()
+  .then(state => console.log(`✅ Conectado na live (room ${state.roomId})`))
+  .catch(err => console.error('❌ Falha ao conectar:', err));
+
+io.on('connection', (socket) => {
+  console.log('🖥️ Jogo conectado.');
+
+  tiktok.on('chat', d => socket.emit('tiktok-chat', {
+    user: d.uniqueId, comment: d.comment
+  }));
+
+  tiktok.on('like', d => socket.emit('tiktok-like', {
+    user: d.uniqueId, likeCount: d.likeCount
+  }));
+
+  tiktok.on('gift', d => socket.emit('tiktok-gift', {
+    user: d.uniqueId,
+    giftName: d.giftName,
+    amount: d.repeatCount,
+    diamonds: d.diamondCount || 1
+  }));
+
+  tiktok.on('follow', d => socket.emit('tiktok-follow', {
+    user: d.uniqueId
+  }));
 });
 
-app.get('*', (_req, res) => {
-  res.sendFile(path.join(publicDir, 'index.html'));
-});
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Batalha Brasil disponível na porta ${PORT}`);
-});
+server.listen(3000, () =>
+  console.log('🚀 Jogo em http://localhost:3000')
+);
