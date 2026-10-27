@@ -1,72 +1,282 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#101827">
-<meta name="description" content="Batalha Brasil: um jogo arcade de sátira política com golpes, especiais e duelo contra o computador.">
-<title>Batalha Brasil — Arena da Sátira</title>
+<meta charset="UTF-8">
+<title>Batalha: Lula vs Flávio Bolsonaro</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1020;--panel:#141e31;--line:#30415f;--gold:#ffd166;--green:#39d98a;--red:#ff5964;--blue:#55c7ff;--text:#f5f7ff;--muted:#aebbd3}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1d3557 0,#0b1020 58%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}header{padding:18px 16px 10px;text-align:center}.eyebrow{color:var(--gold);font-weight:900;letter-spacing:.22em;font-size:.72rem;text-transform:uppercase}h1{margin:6px 0;font-size:clamp(1.7rem,5vw,3rem);line-height:1.05;font-weight:1000;text-transform:uppercase;text-shadow:0 4px 0 #0006}header p{color:var(--muted);margin:8px auto 0;max-width:720px;font-size:.94rem}main{width:min(1100px,100%);margin:auto;padding:12px 14px 30px}.hud{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin-bottom:10px}.fighter-hud{background:#111b2c;border:1px solid var(--line);border-radius:13px;padding:10px 12px;min-width:0}.fighter-hud.right{text-align:right}.fighter-name{font-size:clamp(.85rem,2.5vw,1.1rem);font-weight:900;display:flex;justify-content:space-between;gap:8px}.right .fighter-name{flex-direction:row-reverse}.health{height:14px;background:#394357;border:2px solid #0008;border-radius:30px;margin-top:8px;overflow:hidden}.health>div{height:100%;width:100%;transition:width .12s linear;background:linear-gradient(90deg,#27c777,#9cf36d)}.right .health>div{margin-left:auto;background:linear-gradient(90deg,#ffbd4a,#ff5964)}.meter{font-size:.75rem;color:var(--muted);margin-top:5px}.timer{font-size:clamp(1.35rem,4vw,2rem);font-weight:1000;color:var(--gold);min-width:62px;text-align:center}.arena-wrap{position:relative;border:2px solid #536783;border-radius:16px;overflow:hidden;box-shadow:0 16px 50px #0007;background:#0e1728}.arena-label{position:absolute;z-index:2;top:10px;left:0;right:0;text-align:center;font-weight:900;letter-spacing:.12em;font-size:.72rem;color:#f6f7ffb8;text-transform:uppercase;pointer-events:none}canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;touch-action:pan-y}.overlay{position:absolute;z-index:4;inset:0;background:#07101bd9;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center}.overlay.hidden{display:none}.overlay-card{max-width:560px}.overlay h2{font-size:clamp(1.5rem,5vw,2.7rem);margin:0 0 10px;color:var(--gold);text-transform:uppercase}.overlay p{color:#e2e9f8;line-height:1.5}.primary,.secondary,.fighter-choice,.touch button{border:0;border-radius:10px;padding:12px 16px;font-weight:900;cursor:pointer;color:#101827;background:var(--gold);box-shadow:0 4px 0 #a9781e;transition:transform .1s,filter .1s}.primary:active,.secondary:active,.fighter-choice:active,.touch button:active{transform:translateY(2px);box-shadow:0 2px 0 #a9781e}.secondary{background:#24334b;color:white;box-shadow:0 4px 0 #111b2b;border:1px solid #51627b}.controls{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;margin-top:14px}.panel{background:#111b2c;border:1px solid var(--line);border-radius:14px;padding:14px}.panel h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin:0 0 10px}.keys{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.key{background:#1b2940;border:1px solid #3c506e;border-radius:9px;padding:8px;text-align:center}.key b{display:block;font-size:1rem;color:white}.key small{font-size:.68rem;color:var(--muted)}.choice-row{display:flex;gap:8px;flex-wrap:wrap}.fighter-choice{background:#21324a;color:white;box-shadow:0 3px 0 #0a111e;border:1px solid #4b6280;padding:9px 11px}.fighter-choice.selected{outline:2px solid var(--gold);background:#344a67}.game-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.status{min-height:24px;margin-top:9px;color:var(--muted);font-size:.85rem}.touch{display:none;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.touch-group{display:flex;gap:8px}.touch button{flex:1;padding:16px 8px;background:#24334b;color:white;box-shadow:0 4px 0 #070c15;border:1px solid #51627b;touch-action:manipulation}.touch button.attack{background:#c83c4c;box-shadow:0 4px 0 #681c27}.touch button.special{background:#2b8f70;box-shadow:0 4px 0 #15523f}.footer{text-align:center;color:#8998b3;font-size:.75rem;padding:18px 10px 0}.footer strong{color:#c8d3e8}
-@media(max-width:640px){header{padding-top:14px}.hud{gap:6px}.fighter-hud{padding:8px}.health{height:12px}.controls{grid-template-columns:1fr}.keys{grid-template-columns:repeat(4,1fr)}.touch{display:grid}.panel{padding:12px}.arena-label{font-size:.58rem}main{padding:10px 9px 24px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Arial Black', sans-serif;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 100%);
+    color: white; min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; padding: 20px; overflow: hidden;
+  }
+  h1 {
+    font-size: 2.3em; text-align: center; margin-bottom: 15px;
+    background: linear-gradient(90deg, #e53935, #fff, #1e88e5);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent; text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .arena {
+    display: flex; justify-content: space-between;
+    width: 100%; max-width: 1200px;
+    gap: 20px; flex: 1; align-items: center;
+  }
+  .fighter {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 12px;
+    padding: 20px; border-radius: 20px;
+    min-width: 0; transition: box-shadow 0.2s;
+  }
+  .fighter.lula   { background: linear-gradient(180deg, rgba(229,57,53,0.3), rgba(229,57,53,0.05)); border: 3px solid #e53935; }
+  .fighter.flavio { background: linear-gradient(180deg, rgba(30,136,229,0.3), rgba(30,136,229,0.05)); border: 3px solid #1e88e5; }
+
+  .avatar {
+    font-size: 8em; line-height: 1;
+    animation: idle 2s ease-in-out infinite;
+  }
+  .fighter.lula   .avatar { filter: drop-shadow(0 0 25px #e53935); }
+  .fighter.flavio .avatar { filter: drop-shadow(0 0 25px #1e88e5); }
+  @keyframes idle { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+  .fighter.hit .avatar { animation: shake 0.35s; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25%     { transform: translateX(-18px) rotate(-6deg); }
+    75%     { transform: translateX(18px)  rotate(6deg); }
+  }
+
+  .name { font-size: 1.8em; text-transform: uppercase; letter-spacing: 3px; }
+
+  .hp-bar-container {
+    width: 100%; height: 42px; background: #222;
+    border-radius: 22px; overflow: hidden;
+    border: 2px solid #fff; position: relative;
+  }
+  .hp-bar { height: 100%; transition: width 0.3s ease-out; }
+  .lula   .hp-bar { background: linear-gradient(90deg, #ff5252, #e53935); }
+  .flavio .hp-bar { background: linear-gradient(90deg, #42a5f5, #1e88e5); }
+  .hp-text {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.95em; text-shadow: 2px 2px 4px black;
+    z-index: 2;
+  }
+
+  .vs {
+    font-size: 4em; color: #ffd54f;
+    text-shadow: 0 0 25px #ffd54f;
+    animation: pulse 1s infinite; flex-shrink: 0;
+  }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+  .hint {
+    text-align: center; margin-top: 20px;
+    font-size: 1.1em; color: #aaa;
+  }
+  .hint code {
+    background: #222; padding: 3px 8px;
+    border-radius: 5px; color: #ffd54f;
+    font-family: monospace;
+  }
+
+  #log {
+    position: fixed; bottom: 20px; right: 20px;
+    width: 340px; max-height: 220px; overflow-y: auto;
+    background: rgba(0,0,0,0.85); border: 1px solid #444;
+    border-radius: 10px; padding: 10px;
+    font-size: 0.85em; font-family: monospace;
+  }
+  #log p { margin: 3px 0; }
+  .event-chat   { color: #4fc3f7; }
+  .event-gift   { color: #ffd54f; }
+  .event-like   { color: #ff8a65; }
+  .event-follow { color: #81c784; }
+
+  .winner {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4.5em; text-transform: uppercase;
+    padding: 30px 60px; border-radius: 20px;
+    background: rgba(0,0,0,0.95); border: 5px solid #ffd54f;
+    display: none; z-index: 100; text-align: center;
+    animation: pulse 0.5s infinite;
+  }
 </style>
 </head>
 <body>
-<header><div class="eyebrow">Arcade • sátira • diversão</div><h1>⚡ Batalha Brasil ⚡</h1><p>Uma arena fictícia de humor político. Escolha seu lutador, desvie, ataque e vença o duelo!</p></header>
-<main>
-<div class="hud">
- <div class="fighter-hud"><div class="fighter-name"><span id="p1name">Lula</span><span>🇧🇷</span></div><div class="health"><div id="hp1"></div></div><div class="meter" id="m1">Energia: 100%</div></div>
- <div class="timer" id="timer">60</div>
- <div class="fighter-hud right"><div class="fighter-name"><span id="p2name">Flávio</span><span>🇧🇷</span></div><div class="health"><div id="hp2"></div></div><div class="meter" id="m2">Energia: 100%</div></div>
+
+<h1>⚔️ Lula vs Flávio Bolsonaro ⚔️</h1>
+
+<div class="arena">
+  <div class="fighter lula" id="fighter-lula">
+    <div class="avatar">🦑</div>
+    <div class="name">Lula</div>
+    <div class="hp-bar-container">
+      <div class="hp-text" id="hp-text-lula">1000 / 1000</div>
+      <div class="hp-bar" id="hp-bar-lula" style="width:100%"></div>
+    </div>
+  </div>
+
+  <div class="vs">VS</div>
+
+  <div class="fighter flavio" id="fighter-flavio">
+    <div class="avatar">🦅</div>
+    <div class="name">Flávio</div>
+    <div class="hp-bar-container">
+      <div class="hp-text" id="hp-text-flavio">1000 / 1000</div>
+      <div class="hp-bar" id="hp-bar-flavio" style="width:100%"></div>
+    </div>
+  </div>
 </div>
-<div class="arena-wrap"><div class="arena-label">Plenário da zoeira • duelo amistoso</div><canvas id="game" width="960" height="540" aria-label="Arena de batalha arcade"></canvas>
-<div class="overlay" id="overlay"><div class="overlay-card"><h2 id="overlayTitle">Quem vai dominar a arena?</h2><p id="overlayText">Um jogo de luta arcade fictício. Você controla o lutador da esquerda; o adversário é controlado pelo computador.</p><button class="primary" id="start">COMEÇAR A BATALHA</button></div></div></div>
-<div class="controls">
- <section class="panel"><h3>Controles do jogador</h3><div class="keys"><div class="key"><b>A / D</b><small>Andar</small></div><div class="key"><b>W</b><small>Pular</small></div><div class="key"><b>J</b><small>Golpe</small></div><div class="key"><b>K</b><small>Especial</small></div></div><div class="game-actions"><button class="secondary" id="pause">Pausar</button><button class="secondary" id="restart">Reiniciar</button></div><div class="status" id="status" aria-live="polite">Pronto para jogar.</div></section>
- <section class="panel"><h3>Escolha seu personagem</h3><div class="choice-row"><button class="fighter-choice selected" data-fighter="lula">🟥 Lula — Resistência</button><button class="fighter-choice" data-fighter="flavio">🟦 Flávio — Agilidade</button></div><p style="color:var(--muted);font-size:.82rem;line-height:1.5;margin-bottom:0">Cada lutador tem atributos próprios. O computador persegue, ataca e pode usar golpes especiais. Personagens representados em estilo caricatural para fins de sátira.</p></section>
+
+<div class="hint">
+  Digite <code>!lula</code> ou <code>!flavio</code> no chat para escolher seu time · Likes, presentes e mensagens causam dano!
 </div>
-<div class="touch" aria-label="Controles táteis"><div class="touch-group"><button data-action="left" aria-label="Mover para esquerda">◀</button><button data-action="right" aria-label="Mover para direita">▶</button><button data-action="jump" aria-label="Pular">⬆</button></div><div class="touch-group"><button class="attack" data-action="attack">GOLPE</button><button class="special" data-action="special">ESPECIAL</button></div></div>
-<div class="footer">Projeto independente de sátira política • Não afiliado a partidos, campanhas ou pessoas retratadas. <strong>Jogue com respeito.</strong></div>
-</main>
+
+<div id="log"></div>
+<div class="winner" id="winner"></div>
+
+<script src="/socket.io/socket.io.js"></script>
 <script>
-(()=>{'use strict';
-const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
-const $=id=>document.getElementById(id);
-const keys=new Set();let running=false,paused=false,last=0,elapsed=0,raf=0,playerPick='lula',shake=0,particles=[],winner='';
-const configs={lula:{name:'Lula',coat:'#d94449',shirt:'#f3f1e7',skin:'#c9875c',hair:'#d6d3c8',speed:3.5,power:10,special:18},flavio:{name:'Flávio Bolsonaro',coat:'#247ac1',shirt:'#f4f5f8',skin:'#dba67c',hair:'#49352c',speed:4.2,power:8,special:15}};
-function makeFighter(kind,x,dir){return {kind,x,y:0,vx:0,vy:0,dir,hp:100,energy:100,ground:422,attack:0,special:0,cool:0,stun:0,walk:0,jumping:false,flash:0,hasHit:false}}
-let p1,p2;
-function reset(){p1=makeFighter(playerPick,245,1);p2=makeFighter(playerPick==='lula'?'flavio':'lula',715,-1);elapsed=0;winner='';particles=[];running=false;paused=false;keys.clear();$('pause').textContent='Pausar';$('overlay').classList.remove('hidden');$('overlayTitle').textContent='Pronto para o duelo?';$('overlayText').textContent='Use A/D para andar, W para pular, J para golpear e K para o especial. O computador controla o outro lutador.';$('start').textContent='COMEÇAR A BATALHA';$('status').textContent='Pronto para jogar.';updateHud();draw()}
-function start(){if(winner)reset();$('overlay').classList.add('hidden');running=true;paused=false;last=performance.now();$('status').textContent='Lute! Encontre a distância certa para atacar.';cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
-function finish(msg){running=false;winner=msg;$('overlay').classList.remove('hidden');$('overlayTitle').textContent=msg;$('overlayText').textContent='A batalha terminou! Reinicie para tentar outro resultado ou troque de personagem.';$('start').textContent='JOGAR NOVAMENTE';$('status').textContent=msg;updateHud()}
-function attack(f,special=false){if(!running||paused||f.cool>0||f.stun>0)return;if(special&&f.energy<25){$('status').textContent='Energia insuficiente para o especial — espere recarregar.';return}f.attack=special?18:12;f.special=special?18:0;f.hasHit=false;f.cool=special?48:28;if(special)f.energy-=25;else f.energy=Math.min(100,f.energy+4);spawn(f.x+f.dir*48,f.ground+f.y-55,special?'#7df9ff':'#ffe08a',special?16:8)}
-function spawn(x,y,color,n){for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*7,vy:(Math.random()-.7)*7,life:20+Math.random()*14,color,r:2+Math.random()*5})}
-function hit(a,b){if(a.attack<=0||a.hasHit)return;const reach=a.special?112:78,dx=b.x-a.x;if(dx*a.dir<0||Math.abs(dx)>reach||Math.abs(a.ground-b.ground)>70||b.flash>0)return;const dmg=a.special?configs[a.kind].special:configs[a.kind].power;b.hp=Math.max(0,b.hp-dmg);b.vx=a.dir*(a.special?9:6);b.stun=a.special?18:10;b.flash=15;shake=8;spawn(b.x,b.ground+b.y-65,a.special?'#6ffaff':'#ffd166',a.special?20:12);a.hasHit=true;$('status').textContent=configs[a.kind].name+' acertou '+(a.special?'um especial!':'um golpe!')}
-function physics(f){if(f.cool>0)f.cool--;if(f.attack>0){f.attack--;if(f.attack===0)f.lastHit=0}if(f.stun>0)f.stun--;if(f.flash>0)f.flash--;f.energy=Math.min(100,f.energy+.06);f.vy+=.72;f.y+=f.vy;if(f.y>0){f.y=0;f.vy=0;f.jumping=false}f.x+=f.vx;f.vx*=.78;f.x=Math.max(65,Math.min(895,f.x));f.walk+=Math.abs(f.vx)*.12}
-function update(dt){if(!running||paused)return;elapsed+=dt;const left=keys.has('a')||keys.has('arrowleft'),right=keys.has('d')||keys.has('arrowright');if(p1.stun<=0){p1.vx=left?-configs[p1.kind].speed:right?configs[p1.kind].speed:p1.vx*.7;if((keys.has('w')||keys.has('arrowup')||keys.has(' '))&&!p1.jumping){p1.vy=-13;p1.jumping=true}}
-if(p2.stun<=0){const dx=p1.x-p2.x,dist=Math.abs(dx);p2.dir=dx<0?-1:1;if(dist>105)p2.vx=p2.dir*configs[p2.kind].speed*.73;else p2.vx*=.65;if(dist<118&&Math.random()<.045)attack(p2,p2.energy>50&&Math.random()<.27);if(dist<145&&p2.y===0&&Math.random()<.0025){p2.vy=-11;p2.jumping=true}}
-p1.dir=p1.x<p2.x?1:-1;p2.dir=p2.x<p1.x?1:-1;if(keys.has('j'))attack(p1);if(keys.has('k'))attack(p1,true);physics(p1);physics(p2);hit(p1,p2);hit(p2,p1);particles=particles.filter(q=>q.life-->0);particles.forEach(q=>{q.x+=q.vx;q.y+=q.vy;q.vy+=.15});shake=Math.max(0,shake-.7);if(p1.hp<=0||p2.hp<=0){finish(p1.hp===p2.hp?'EMPATE!':p2.hp<=0?'VOCÊ VENCEU!':'O COMPUTADOR VENCEU!');return}if(elapsed>=60){finish(p1.hp===p2.hp?'EMPATE NO TEMPO!':p1.hp>p2.hp?'VOCÊ VENCEU POR PONTOS!':'O COMPUTADOR VENCEU POR PONTOS!');return}updateHud()}
-function updateHud(){$('hp1').style.width=p1.hp+'%';$('hp2').style.width=p2.hp+'%';$('m1').textContent='Energia: '+Math.floor(p1.energy)+'%';$('m2').textContent='Energia: '+Math.floor(p2.energy)+'%';$('p1name').textContent=configs[p1.kind].name;$('p2name').textContent=configs[p2.kind].name;$('timer').textContent=Math.max(0,Math.ceil(60-elapsed))}
-function rr(x,y,w,h,r,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
-function drawFighter(f){const c=configs[f.kind],x=f.x,y=f.ground+f.y;ctx.save();ctx.translate(x,y);ctx.scale(f.dir,1);if(f.flash>0&&Math.floor(f.flash/2)%2===0)ctx.globalAlpha=.45;ctx.fillStyle='#0007';ctx.beginPath();ctx.ellipse(0,3,40,9,0,0,Math.PI*2);ctx.fill();rr(-25,-48,18,48,6,'#26364d');rr(5,-48,18,48,6,'#26364d');rr(-30,-9,27,10,4,'#151a24');rr(4,-9,28,10,4,'#151a24');rr(-31,-125,63,81,13,c.coat);rr(-10,-119,21,67,5,c.shirt);ctx.fillStyle='#e7b84c';ctx.fillRect(-2,-114,4,53);
-ctx.save();ctx.translate(-25,-108);ctx.rotate(f.attack>0?-.8:Math.sin(f.walk)*.13);rr(-9,-2,19,54,8,c.coat);ctx.fillStyle=c.skin;ctx.beginPath();ctx.arc(0,52,10,0,Math.PI*2);ctx.fill();ctx.restore();ctx.save();ctx.translate(25,-108);ctx.rotate(f.attack>0?-.9:Math.sin(f.walk+1)*.13);rr(-8,0,18,45,8,c.coat);ctx.fillStyle=c.skin;ctx.beginPath();ctx.arc(1,44,10,0,Math.PI*2);ctx.fill();ctx.restore();
-rr(-10,-143,20,22,6,c.skin);ctx.fillStyle=c.skin;ctx.beginPath();ctx.ellipse(0,-164,29,31,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=c.hair;if(f.kind==='lula'){ctx.beginPath();ctx.ellipse(-2,-184,28,13,0,Math.PI,Math.PI*2);ctx.fill();ctx.fillRect(-27,-184,8,13)}else{ctx.beginPath();ctx.ellipse(-2,-186,29,13,-.12,Math.PI,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-27,-182);ctx.lineTo(-24,-198);ctx.lineTo(-8,-193);ctx.lineTo(3,-201);ctx.lineTo(23,-190);ctx.lineTo(25,-180);ctx.closePath();ctx.fill()}
-ctx.fillStyle='#1b1a1a';ctx.beginPath();ctx.arc(9,-168,2.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(-10,-168,2.5,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#4c2d23';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-17,-175);ctx.lineTo(-6,-177);ctx.moveTo(5,-177);ctx.lineTo(17,-175);ctx.stroke();ctx.strokeStyle='#8d4f3e';ctx.beginPath();ctx.moveTo(0,-165);ctx.lineTo(-2,-157);ctx.stroke();ctx.strokeStyle='#633b2c';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-10,-151);ctx.quadraticCurveTo(0,-145,11,-151);ctx.stroke();if(f.kind==='lula'){ctx.fillStyle='#d2d0c5';ctx.beginPath();ctx.ellipse(0,-151,13,5,0,0,Math.PI*2);ctx.fill()}
-ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(0,-91,9,0,Math.PI*2);ctx.fill();ctx.fillStyle=f.kind==='lula'?'#d84045':'#247ac1';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText('★',0,-87);if(f.attack>0){ctx.strokeStyle=f.special>0?'#78f7ff':'#ffdf80';ctx.lineWidth=f.special>0?12:8;ctx.globalAlpha=.8;ctx.beginPath();ctx.arc(43,-105,f.special>0?50:34,-.8,.75);ctx.stroke()}ctx.restore()}
-function draw(){const w=canvas.width,h=canvas.height;ctx.save();if(shake>0)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#193b57');g.addColorStop(.58,'#24506a');g.addColorStop(1,'#111c30');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);ctx.fillStyle='#14283d';for(let i=0;i<10;i++){const bx=i*108;ctx.fillRect(bx,250+(i%3)*20,80,180);ctx.fillStyle='#f8d88966';for(let j=0;j<4;j++)for(let k=0;k<3;k++)ctx.fillRect(bx+12+j*15,265+(i%3)*20+k*25,6,9);ctx.fillStyle='#14283d'}
-ctx.fillStyle='#d6e3e9';ctx.beginPath();ctx.ellipse(480,290,90,26,0,Math.PI,Math.PI*2);ctx.fill();ctx.fillRect(390,290,180,14);ctx.beginPath();ctx.ellipse(420,310,42,13,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(540,310,42,13,0,0,Math.PI*2);ctx.fill();ctx.fillRect(455,310,50,42);for(let i=0;i<5;i++)ctx.fillRect(450+i*15,310,5,40);
-ctx.strokeStyle='#b9c6d7';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(160,85);ctx.lineTo(160,190);ctx.moveTo(800,85);ctx.lineTo(800,190);ctx.stroke();for(const x of [160,728]){ctx.fillStyle='#1e9d63';ctx.fillRect(x,85,72,44);ctx.fillStyle='#f4d34e';ctx.beginPath();ctx.moveTo(x+36,91);ctx.lineTo(x+64,107);ctx.lineTo(x+36,123);ctx.lineTo(x+8,107);ctx.closePath();ctx.fill();ctx.fillStyle='#2675c7';ctx.beginPath();ctx.arc(x+36,107,10,0,Math.PI*2);ctx.fill()}
-ctx.fillStyle='#101827';ctx.fillRect(0,420,w,120);ctx.fillStyle='#344c63';ctx.fillRect(0,420,w,8);for(let i=0;i<10;i++){ctx.strokeStyle='#ffffff0c';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(i*110,430);ctx.lineTo(i*110-35,540);ctx.stroke()}ctx.fillStyle='#ffffff16';ctx.font='900 28px system-ui';ctx.textAlign='center';ctx.fillText('ARENA DA SÁTIRA',480,500);particles.forEach(q=>{ctx.globalAlpha=Math.max(0,q.life/34);ctx.fillStyle=q.color;ctx.beginPath();ctx.arc(q.x,q.y,q.r,0,Math.PI*2);ctx.fill()});ctx.globalAlpha=1;drawFighter(p1);drawFighter(p2);ctx.restore()}
-function loop(t){const dt=Math.min((t-last)/1000,.04);last=t;update(dt);draw();if(running)raf=requestAnimationFrame(loop)}
-window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup',' ','j','k','a','d','w'].includes(k))e.preventDefault();keys.add(k);if(k==='escape'&&running){paused=!paused;$('pause').textContent=paused?'Continuar':'Pausar';$('status').textContent=paused?'Jogo pausado.':'Batalha retomada.';if(!paused){last=performance.now();raf=requestAnimationFrame(loop)}}});
-window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>keys.clear());
-$('start').addEventListener('click',start);$('restart').addEventListener('click',()=>{cancelAnimationFrame(raf);reset()});$('pause').addEventListener('click',()=>{if(!running)return;paused=!paused;$('pause').textContent=paused?'Continuar':'Pausar';$('status').textContent=paused?'Jogo pausado.':'Batalha retomada.';if(!paused){last=performance.now();raf=requestAnimationFrame(loop)}});
-document.querySelectorAll('[data-fighter]').forEach(btn=>btn.addEventListener('click',()=>{playerPick=btn.dataset.fighter;document.querySelectorAll('[data-fighter]').forEach(b=>b.classList.toggle('selected',b===btn));reset();$('status').textContent='Você escolheu '+configs[playerPick].name+'. Aperte Começar para lutar.'}));
-document.querySelectorAll('[data-action]').forEach(btn=>{const action=btn.dataset.action;const down=e=>{e.preventDefault();if(action==='left')keys.add('a');else if(action==='right')keys.add('d');else if(action==='jump')keys.add('w');else if(action==='attack')attack(p1);else if(action==='special')attack(p1,true)};const up=e=>{e.preventDefault();if(action==='left')keys.delete('a');if(action==='right')keys.delete('d');if(action==='jump')keys.delete('w')};btn.addEventListener('pointerdown',down);btn.addEventListener('pointerup',up);btn.addEventListener('pointercancel',up);btn.addEventListener('pointerleave',up)});
-reset();
-})();
+// ========== ESTADO DO JOGO ==========
+const MAX_HP = 1000;
+const state = {
+  hp: { lula: MAX_HP, flavio: MAX_HP },
+  userTeam: {},           // { uniqueId: 'lula' | 'flavio' }
+  gameOver: false
+};
+
+const el = {
+  barLula:    document.getElementById('hp-bar-lula'),
+  barFlavio:  document.getElementById('hp-bar-flavio'),
+  textLula:   document.getElementById('hp-text-lula'),
+  textFlavio: document.getElementById('hp-text-flavio'),
+  fighterLula:   document.getElementById('fighter-lula'),
+  fighterFlavio: document.getElementById('fighter-flavio'),
+  log:    document.getElementById('log'),
+  winner: document.getElementById('winner')
+};
+
+const socket = io();
+
+// ========== HELPERS ==========
+function addLog(msg, cls = '') {
+  const p = document.createElement('p');
+  p.textContent = msg;
+  if (cls) p.className = cls;
+  el.log.appendChild(p);
+  el.log.scrollTop = el.log.scrollHeight;
+}
+
+function updateBars() {
+  el.barLula.style.width   = (state.hp.lula   / MAX_HP * 100) + '%';
+  el.barFlavio.style.width = (state.hp.flavio / MAX_HP * 100) + '%';
+  el.textLula.textContent   = `${Math.max(0, Math.round(state.hp.lula))} / ${MAX_HP}`;
+  el.textFlavio.textContent = `${Math.max(0, Math.round(state.hp.flavio))} / ${MAX_HP}`;
+}
+
+function flashHit(team) {
+  const target = team === 'lula' ? el.fighterLula : el.fighterFlavio;
+  target.classList.remove('hit');
+  void target.offsetWidth; // reinicia animação
+  target.classList.add('hit');
+}
+
+function applyDamage(targetTeam, amount) {
+  if (state.gameOver) return;
+  state.hp[targetTeam] = Math.max(0, state.hp[targetTeam] - amount);
+  flashHit(targetTeam);
+  updateBars();
+  if (state.hp[targetTeam] <= 0) {
+    declareWinner(targetTeam === 'lula' ? 'flavio' : 'lula');
+  }
+}
+
+function declareWinner(winner) {
+  state.gameOver = true;
+  el.winner.textContent = winner === 'lula' ? '🦑 LULA VENCEU!' : '🦅 FLÁVIO VENCEU!';
+  el.winner.style.color = winner === 'lula' ? '#ff5252' : '#42a5f5';
+  el.winner.style.display = 'block';
+  addLog(`🏆 Vitória de ${winner.toUpperCase()}!`, 'event-gift');
+
+  setTimeout(() => {
+    state.hp = { lula: MAX_HP, flavio: MAX_HP };
+    state.gameOver = false;
+    el.winner.style.display = 'none';
+    updateBars();
+    addLog('🔄 Nova batalha começou!', 'event-follow');
+  }, 8000);
+}
+
+// Aplica dano no INIMIGO do time do usuário. Retorna true se aplicou.
+function damageFrom(user, amount) {
+  const team = state.userTeam[user.toLowerCase()];
+  if (!team || state.gameOver) return false;
+  const enemy = team === 'lula' ? 'flavio' : 'lula';
+  applyDamage(enemy, amount);
+  return true;
+}
+
+function joinTeam(user, team) {
+  state.userTeam[user.toLowerCase()] = team;
+}
+
+// ========== EVENTOS DO TIKTOK ==========
+socket.on('tiktok-chat', ({ user, comment }) => {
+  const txt = comment.trim().toLowerCase();
+
+  if (txt === '!lula' || txt === 'lula') {
+    joinTeam(user, 'lula');
+    addLog(`➕ ${user} entrou no time LULA 🦑`, 'event-chat');
+    return;
+  }
+  if (['!flavio','flavio','!flávio','flávio','!bolsonaro','bolsonaro'].includes(txt)) {
+    joinTeam(user, 'flavio');
+    addLog(`➕ ${user} entrou no time FLÁVIO 🦅`, 'event-chat');
+    return;
+  }
+
+  // Mensagem normal: 2 de dano se já estiver num time
+  if (damageFrom(user, 2)) {
+    addLog(`💬 ${user}: "${comment}" (-2 HP)`, 'event-chat');
+  } else {
+    addLog(`💬 ${user}: ${comment}`, 'event-chat');
+  }
+});
+
+socket.on('tiktok-like', ({ user, likeCount }) => {
+  const dmg = Math.min(likeCount, 20); // cap pra não zerar de uma vez
+  if (damageFrom(user, dmg)) {
+    addLog(`❤️ ${user} deu ${likeCount} likes (-${dmg} HP)`, 'event-like');
+  } else {
+    addLog(`❤️ ${user} deu ${likeCount} likes`, 'event-like');
+  }
+});
+
+socket.on('tiktok-gift', ({ user, giftName, amount, diamonds }) => {
+  // dano = 10 * valor do presente * quantidade (máx 500 por evento)
+  const dmg = Math.min(10 * diamonds * amount, 500);
+  if (damageFrom(user, dmg)) {
+    addLog(`🎁 ${user} enviou ${amount}x ${giftName} (-${dmg} HP!)`, 'event-gift');
+  } else {
+    addLog(`🎁 ${user} enviou ${amount}x ${giftName} (precisa entrar num time!)`, 'event-gift');
+  }
+});
+
+socket.on('tiktok-follow', ({ user }) => {
+  if (damageFrom(user, 50)) {
+    addLog(`⭐ ${user} seguiu e causou -50 HP!`, 'event-follow');
+  } else {
+    addLog(`⭐ ${user} seguiu o canal!`, 'event-follow');
+  }
+});
+
+// ========== INÍCIO ==========
+updateBars();
+addLog('🎮 Batalha iniciada! Digite !lula ou !flavio no chat.', 'event-follow');
 </script>
 </body>
 </html>
